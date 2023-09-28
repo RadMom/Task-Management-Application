@@ -10,6 +10,7 @@ const tasksRoutes = require("./routes/taskRoutes");
 const port = process.env.PORT || 5000;
 
 // mongoose config
+mongoose.set("strictQuery", false);
 const connectDB = async () => {
     try {
         const connection = await mongoose.connect(process.env.MONGO_URL, {

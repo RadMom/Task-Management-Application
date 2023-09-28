@@ -1,8 +1,9 @@
 const express = require("express");
 const tasksRoutes = express.Router();
+const { createTask } = require("../controllers/taskControllers");
 
 // createTask
-tasksRoutes.post("/");
+tasksRoutes.post("/", createTask);
 
 // getAllPublicTasks
 tasksRoutes.get("/public");

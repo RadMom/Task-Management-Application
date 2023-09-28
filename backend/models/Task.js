@@ -11,15 +11,15 @@ const taskSchema = new Schema(
         creator: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true,
+            // required: true,
         },
         startDate: {
             type: Date,
-            required: true,
+            default: Date.now,
         },
-        endDate: {
+        deadline: {
             type: Date,
-            required: true,
+            // required: true,
         },
         description: {
             type: String,
@@ -39,22 +39,14 @@ const taskSchema = new Schema(
             enum: ["Low", "Medium", "High"],
             default: "Medium",
         },
-        comments: [
-            {
-                user: {
+
+        likes: {
+            users: [
+                {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "User",
                 },
-                type: String,
-                createdAt: {
-                    type: Date,
-                    default: Date.now,
-                },
-            },
-        ],
-        likes: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            ],
         },
     },
     { timestamps: true }
