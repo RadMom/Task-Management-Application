@@ -1,6 +1,15 @@
 const express = require("express");
 const tasksRoutes = express.Router();
-const { createTask } = require("../controllers/taskControllers");
+const {
+    createTask,
+    getAllPublicTasks,
+    getUserTasks,
+    getTask,
+    editTask,
+    deleteTask,
+    likeTask,
+    unlikeTask,
+} = require("../controllers/taskControllers");
 
 // createTask
 tasksRoutes.post("/", createTask);
