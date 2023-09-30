@@ -10,18 +10,18 @@ const {
 } = require("../controllers/userControllers");
 
 // registration
-userRoutes.post("/register");
+userRoutes.post("/register", registerUser);
 
 // login
-userRoutes.post("/login");
+userRoutes.post("/login", loginUser);
 
 // logout
-userRoutes.post("/logout");
+userRoutes.post("/logout", logoutUser);
 
 // updateUserProfile
-userRoutes.put("/:userId");
+userRoutes.put("/:userId", updateUser);
 
 //deleteUserProfile
-userRoutes.put("/:userId");
+userRoutes.delete("/:userId", deleteUser);
 
 module.exports = userRoutes;
