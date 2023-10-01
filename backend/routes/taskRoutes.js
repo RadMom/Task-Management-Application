@@ -35,6 +35,6 @@ tasksRoutes.delete("/:taskId", authUser, deleteTask);
 tasksRoutes.post("/:taskId/like", authUser, likeTask);
 
 // unlikeTask
-tasksRoutes.delete("/:taskId/like", authUser, unlikeTask);
+tasksRoutes.post("/:taskId/unlike", authUser, unlikeTask);
 
 module.exports = tasksRoutes;

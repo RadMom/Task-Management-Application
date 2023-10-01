@@ -14,7 +14,7 @@ const createTask = async (req, res) => {
     // }
 
     try {
-        const newTask = await new Task({ ...task, creator: userId });
+        const newTask = new Task({ ...task, creator: userId });
         await newTask.save();
         res.status(200).json(newTask);
     } catch (err) {
@@ -52,6 +52,7 @@ const getUserTasks = async (req, res) => {
 
 // getSingleTask
 // tasksRoutes.get("/:taskId");
+//Why .toString => if (req.user._id.toString() == task.creator.toString()) ???
 const getTask = async (req, res) => {
     const taskId = req.params.taskId;
 
@@ -77,38 +78,94 @@ const getTask = async (req, res) => {
 
 // editTask
 // tasksRoutes.put("/:taskId");
-const editTask = async (req, res) => {};
-try {
-} catch (err) {
-    console.log(err);
-}
+const editTask = async (req, res) => {
+    const taskId = req.params.taskId;
+    const userId = req.user;
+    const task = req.body;
+    try {
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 // deleteTask
 // tasksRoutes.delete("/:taskId");
 const deleteTask = async (req, res) => {
     const taskId = req.params.taskId;
     console.log(taskId);
+    try {
+        const task = await Task.findById(taskId);
+        if (req.user._id.toString() == task.creator.toString()) {
+            //task.creator is object that's why we use toString()
+            console.log("userId is = task.creator ID");
+            await Task.findByIdAndDelete(taskId);
+            res.status(200).json({ message: "Task deleted" });
+        } else {
+            res.status(401).json({ message: "Not authorized, token failed!" });
+        }
+    } catch (err) {
+        console.log(err);
+    }
 };
-try {
-} catch (err) {
-    console.log(err);
-}
 
 // likeTask
 // tasksRoutes.post("/:taskId/like");
-const likeTask = async (req, res) => {};
-try {
-} catch (err) {
-    console.log(err);
-}
+const likeTask = async (req, res) => {
+    const taskId = req.params.taskId;
+    const userId = req.user._id;
+    console.log(taskId, userId);
+    try {
+        //Check if task exists
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+
+        //Check if user has already liked the task
+        if (task.likes.users.includes(userId)) {
+            return res.status(400).json({ message: "You have already liked the task" });
+        }
+
+        task.likes.users.push(userId);
+
+        await task.save();
+
+        return res.status(200).json({ message: "Task liked successfully" });
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 // unlikeTask
-// tasksRoutes.delete("/:taskId/like");
-const unlikeTask = async (req, res) => {};
-try {
-} catch (err) {
-    console.log(err);
-}
+// tasksRoutes.delete("/:taskId/unlike");
+//Why had to .toString when task.likes.users.filter((id) => id.toString() != userId.toString());???
+const unlikeTask = async (req, res) => {
+    const taskId = req.params.taskId;
+    const userId = req.user._id;
+    console.log(taskId, userId);
+    try {
+        //Check if task exists
+        const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+
+        //Check if user has already liked the task
+        if (!task.likes.users.includes(userId)) {
+            return res.status(400).json({ message: "You haven't liked this task" });
+        }
+
+        console.log("Before filter:" + task.likes.users);
+        task.likes.users = task.likes.users.filter((id) => id.toString() != userId.toString());
+        console.log("After filter:" + task.likes.users);
+
+        await task.save();
+
+        return res.status(200).json({ message: "Task unliked successfully" });
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 module.exports = {
     createTask,
