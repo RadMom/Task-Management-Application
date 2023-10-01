@@ -38,8 +38,13 @@ const getAllPublicTasks = async (req, res) => {
 const getUserTasks = async (req, res) => {
     const userId = req.params.userId;
     try {
-        const userTasks = await Task.find({ creator: userId });
-        res.status(200).json(userTasks);
+        if (userId == req.user.toString()) {
+            const userTasks = await Task.find({ creator: userId });
+            res.status(200).json(userTasks);
+        } else {
+            const userTasks = await Task.find({ creator: userId, isPublic: true });
+            res.status(200).json(userTasks);
+        }
     } catch (err) {
         console.log(err);
     }
@@ -47,28 +52,22 @@ const getUserTasks = async (req, res) => {
 
 // getSingleTask
 // tasksRoutes.get("/:taskId");
-const getTask = async (req, res, next) => {
+const getTask = async (req, res) => {
     const taskId = req.params.taskId;
 
     try {
         const task = await Task.findById(taskId);
-        console.log(`Task-a e: ${task.creator}`);
+        console.log(`Task-a e: ${typeof task.creator}`); //Object
 
         if (!task.isPublic) {
-            await authUser(req, res, next);
-            const userId = req.user._id;
-            const creatorId = task.creator;
-            console.log(userId, creatorId);
-
-            if (req.user._id == task.creator) {
+            if (req.user._id.toString() == task.creator.toString()) {
+                //task.creator is object that's why we use toString()
                 console.log("userId is = task.creator ID");
                 res.status(200).json(task);
-                return;
             } else {
                 res.status(401).json({ message: "Not authorized, token failed!" });
             }
         } else {
-            console.log(req.user);
             res.status(200).json(task);
         }
     } catch (err) {
@@ -86,7 +85,10 @@ try {
 
 // deleteTask
 // tasksRoutes.delete("/:taskId");
-const deleteTask = async (req, res) => {};
+const deleteTask = async (req, res) => {
+    const taskId = req.params.taskId;
+    console.log(taskId);
+};
 try {
 } catch (err) {
     console.log(err);

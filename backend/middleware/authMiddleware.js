@@ -11,7 +11,7 @@ const authUser = async (req, res, next) => {
         try {
             const { userId } = jwt.verify(token, process.env.JWT_SECRET);
             console.log("auth userId:" + userId);
-            req.user = await User.findOne({ _id: userId }); //Now req.user===userId
+            req.user = await User.findOne({ _id: userId }).select("_id"); //Now req.user===userId
             console.log("authUser after req.user:" + req.user._id);
             next();
         } catch (err) {

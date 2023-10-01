@@ -14,27 +14,27 @@ const {
 } = require("../controllers/taskControllers");
 
 // createTask
-tasksRoutes.post("/", createTask);
+tasksRoutes.post("/", authUser, createTask);
 
 // getAllPublicTasks
-tasksRoutes.get("/public");
+tasksRoutes.get("/public", getAllPublicTasks);
 
 // getAllUserTasks
-tasksRoutes.get("/user/:userId");
+tasksRoutes.get("/user/:userId", authUser, getUserTasks);
 
 // getSingleTask
-tasksRoutes.get("/:taskId", getTask);
+tasksRoutes.get("/:taskId", authUser, getTask);
 
 // editTask
 tasksRoutes.put("/:taskId", authUser, editTask);
 
 // deleteTask
-tasksRoutes.delete("/:taskId");
+tasksRoutes.delete("/:taskId", authUser, deleteTask);
 
 // likeTask
-tasksRoutes.post("/:taskId/like");
+tasksRoutes.post("/:taskId/like", authUser, likeTask);
 
 // unlikeTask
-tasksRoutes.delete("/:taskId/like");
+tasksRoutes.delete("/:taskId/like", authUser, unlikeTask);
 
 module.exports = tasksRoutes;
