@@ -11,7 +11,7 @@ const taskSchema = new Schema(
         creator: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            // required: true,
+            required: true,
         },
         startDate: {
             type: Date,

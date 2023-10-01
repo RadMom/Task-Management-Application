@@ -1,4 +1,7 @@
+const { ObjectId } = require("mongoose");
 const Task = require("../models/Task");
+const checkIsPublic = require("../middleware/checkIsPublicMuddleware");
+const authUser = require("../middleware/authMiddleware");
 
 // createTask
 // tasksRoutes.post("/");
@@ -11,7 +14,7 @@ const createTask = async (req, res) => {
     // }
 
     try {
-        const newTask = new Task({ ...task, userId });
+        const newTask = await new Task({ ...task, creator: userId });
         await newTask.save();
         res.status(200).json(newTask);
     } catch (err) {
@@ -44,10 +47,30 @@ const getUserTasks = async (req, res) => {
 
 // getSingleTask
 // tasksRoutes.get("/:taskId");
-const getTask = async (req, res) => {
+const getTask = async (req, res, next) => {
     const taskId = req.params.taskId;
+
     try {
         const task = await Task.findById(taskId);
+        console.log(`Task-a e: ${task.creator}`);
+
+        if (!task.isPublic) {
+            await authUser(req, res, next);
+            const userId = req.user._id;
+            const creatorId = task.creator;
+            console.log(userId, creatorId);
+
+            if (req.user._id == task.creator) {
+                console.log("userId is = task.creator ID");
+                res.status(200).json(task);
+                return;
+            } else {
+                res.status(401).json({ message: "Not authorized, token failed!" });
+            }
+        } else {
+            console.log(req.user);
+            res.status(200).json(task);
+        }
     } catch (err) {
         console.log(err);
     }

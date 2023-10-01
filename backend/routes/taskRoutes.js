@@ -1,4 +1,6 @@
 const express = require("express");
+const authUser = require("../middleware/authMiddleware");
+
 const tasksRoutes = express.Router();
 const {
     createTask,
@@ -21,10 +23,10 @@ tasksRoutes.get("/public");
 tasksRoutes.get("/user/:userId");
 
 // getSingleTask
-tasksRoutes.get("/:taskId");
+tasksRoutes.get("/:taskId", getTask);
 
 // editTask
-tasksRoutes.put("/:taskId");
+tasksRoutes.put("/:taskId", authUser, editTask);
 
 // deleteTask
 tasksRoutes.delete("/:taskId");

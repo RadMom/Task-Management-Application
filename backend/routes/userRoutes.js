@@ -1,4 +1,6 @@
 const express = require("express");
+const authUser = require("../middleware/authMiddleware");
+
 const userRoutes = express.Router();
 
 const {
@@ -19,9 +21,9 @@ userRoutes.post("/login", loginUser);
 userRoutes.post("/logout", logoutUser);
 
 // updateUserProfile
-userRoutes.put("/:userId", updateUser);
+userRoutes.put("/:userId", authUser, updateUser);
 
 //deleteUserProfile
-userRoutes.delete("/:userId", deleteUser);
+userRoutes.delete("/:userId", authUser, deleteUser);
 
 module.exports = userRoutes;
