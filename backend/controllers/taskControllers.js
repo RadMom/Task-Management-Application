@@ -1,7 +1,4 @@
-const { ObjectId } = require("mongoose");
 const Task = require("../models/Task");
-const checkIsPublic = require("../middleware/checkIsPublicMuddleware");
-const authUser = require("../middleware/authMiddleware");
 
 // createTask
 // tasksRoutes.post("/");
@@ -10,27 +7,31 @@ const createTask = async (req, res) => {
     const userId = req.user._id;
     console.log(req.body);
 
-    // if (task.title  || !task.deadline || task.description) {
-    //     res.status(400).json({ message: "Title,creator,deadline and discription are required !" });
-    // }
+    //Input validation
+    if (task.title || task.description) {
+        return res.status(400).json({ message: "Title, and discription are required !" });
+    }
 
     try {
         const newTask = new Task({ ...task, creator: userId });
         await newTask.save();
-        res.status(200).json(newTask);
+        res.status(200).json({ message: "Task created successfully", newTask });
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
 // getAllPublicTasks
 // tasksRoutes.get("/public");
+//NEED PAGINATION LOGIC !!!!!
 const getAllPublicTasks = async (req, res) => {
     try {
         const publicTasks = await Task.find({ isPublic: true });
         res.status(200).json(publicTasks);
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -47,7 +48,8 @@ const getUserTasks = async (req, res) => {
             res.status(200).json(userTasks);
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -59,21 +61,19 @@ const getTask = async (req, res) => {
 
     try {
         const task = await Task.findById(taskId);
-        console.log(`Task-a e: ${typeof task.creator}`); //Object
-
-        if (!task.isPublic) {
-            if (req.user._id.toString() == task.creator.toString()) {
-                //task.creator is object that's why we use toString()
-                console.log("userId is = task.creator ID");
-                res.status(200).json(task);
-            } else {
-                res.status(401).json({ message: "Not authorized, token failed!" });
-            }
-        } else {
-            res.status(200).json(task);
+        console.log(`Task is: ${typeof task.creator}`); //Object
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
         }
+
+        if (!task.isPublic && req.user._id.toString() !== task.creator.toString()) {
+            return res.status(401).json({ message: "Not authorized, token failed!" });
+        }
+
+        res.status(200).json(task);
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -100,12 +100,12 @@ const editTask = async (req, res) => {
         }
 
         // Update task properties
-        if (title) task.title = title;
-        if (description) task.description = description;
-        if (deadline) task.deadline = deadline;
-        if (status) task.status = status;
-        if (isPublic !== undefined) task.isPublic = isPublic;
-        if (priority) task.priority = priority;
+        task.title = title || task.title;
+        task.description = description || task.description;
+        task.deadline = deadline || task.deadline;
+        task.status = status || task.status;
+        task.isPublic = isPublic !== undefined ? isPublic : task.isPublic;
+        task.priority = priority || task.priority;
 
         // Save the updated task
         await task.save();
@@ -124,6 +124,9 @@ const deleteTask = async (req, res) => {
     console.log(taskId);
     try {
         const task = await Task.findById(taskId);
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
         if (req.user._id.toString() == task.creator.toString()) {
             //task.creator is object that's why we use toString()
             console.log("userId is = task.creator ID");
@@ -133,7 +136,8 @@ const deleteTask = async (req, res) => {
             res.status(401).json({ message: "Not authorized, token failed!" });
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -154,14 +158,23 @@ const likeTask = async (req, res) => {
         if (task.likes.users.includes(userId)) {
             return res.status(400).json({ message: "You have already liked the task" });
         }
+        // Fetch the user's name from the database (only name is retrieved)
+        const userInfo = await User.findById(userId).select("name");
+        if (!userInfo) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
-        task.likes.users.push(userId);
+        const userName = userInfo.name;
+
+        // Add the like with userId and userName to the task
+        task.likes.users.push({ userId, userName });
 
         await task.save();
 
         return res.status(200).json({ message: "Task liked successfully" });
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -185,14 +198,17 @@ const unlikeTask = async (req, res) => {
         }
 
         console.log("Before filter:" + task.likes.users);
-        task.likes.users = task.likes.users.filter((id) => id.toString() != userId.toString());
+        task.likes.users = task.likes.users.filter(
+            (user) => user.userId.toString() != userId.toString()
+        );
         console.log("After filter:" + task.likes.users);
 
         await task.save();
 
         return res.status(200).json({ message: "Task unliked successfully" });
     } catch (err) {
-        console.log(err);
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 

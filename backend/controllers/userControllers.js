@@ -14,6 +14,7 @@ const registerUser = async (req, res) => {
         return res.status(400).json({ message: "Please provide name, email and password" });
         // throw new Error("Please provide name, email and password");
     }
+
     try {
         const userExist = await User.findOne({ email });
         if (userExist) {
@@ -21,7 +22,7 @@ const registerUser = async (req, res) => {
             // throw Error("User already exists");
         }
 
-        // hash password
+        // hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -154,8 +155,13 @@ const deleteUser = async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(id);
         //Still { message: `User with id: ${id} deleted` }if we put valid id but the id does NOT exist?
-        //Or if id is undefined we still json({ message: `User with id: ${id} deleted` })???
-        res.status(200).json({ message: `User with id: ${id} deleted` });
+        //The findByIdAndDelete method in Mongoose will return null if the provided id does not exist in the database.
+        //This means that if you attempt to delete a user with a valid but non-existent id,
+        //the user variable will be assigned the value null.
+        if (!user) {
+            return res.status(404).json({ message: `User with id: ${id} not found` });
+        }
+        return res.status(200).json({ message: `User with id: ${id} deleted` });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: err.message });

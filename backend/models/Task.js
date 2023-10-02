@@ -43,8 +43,13 @@ const taskSchema = new Schema(
         likes: {
             users: [
                 {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "User",
+                    userId: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: "User",
+                    },
+                    username: {
+                        type: String,
+                    },
                 },
             ],
         },
