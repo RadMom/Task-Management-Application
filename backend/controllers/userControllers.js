@@ -42,7 +42,7 @@ const registerUser = async (req, res) => {
             // throw new Error("Invalud user data");
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({ message: err.message }); // Status 500 (Internal Server Error) for unexpected errors
     }
 };
@@ -83,7 +83,7 @@ const loginUser = async (req, res) => {
             email: user.email,
         });
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({ message: err.message }); //Status 500 (Internal Server Error) for unexpected errors
     }
 };
