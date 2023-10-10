@@ -26,10 +26,15 @@ const connectDB = async () => {
 connectDB();
 
 const app = express();
-app.use(cors());
+app.use(
+    cors({
+        origin: "http://127.0.0.1:3000", // Set the allowed origin
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Specify the allowed HTTP methods
+        credentials: true, // Allow cookies and authorization headers to be sent
+    })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cookieParser());
 
 //app routes

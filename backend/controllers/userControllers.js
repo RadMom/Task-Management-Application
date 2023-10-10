@@ -74,7 +74,7 @@ const loginUser = async (req, res) => {
 
         // Generate JWT Token
         generateJWT(res, user._id);
-
+        console.log(res.cookie.jwt);
         // Respond with success and user data
         res.status(200).json({
             message: `${user.email} successfully logged in`,

@@ -1,14 +1,16 @@
 const Task = require("../models/Task");
+const User = require("../models/User");
 
 // createTask
 // tasksRoutes.post("/");
 const createTask = async (req, res) => {
     const task = req.body;
+
     const userId = req.user._id;
-    console.log(req.body);
+    console.log(task);
 
     //Input validation
-    if (task.title || task.description) {
+    if (!task.title || !task.description) {
         return res.status(400).json({ message: "Title, and discription are required !" });
     }
 
@@ -131,7 +133,7 @@ const deleteTask = async (req, res) => {
             //task.creator is object that's why we use toString()
             console.log("userId is = task.creator ID");
             await Task.findByIdAndDelete(taskId);
-            res.status(200).json({ message: "Task deleted" });
+            res.status(200).json({ message: `Task with ID: ${taskId} deleted` });
         } else {
             res.status(401).json({ message: "Not authorized, token failed!" });
         }
@@ -153,7 +155,7 @@ const likeTask = async (req, res) => {
         if (!task) {
             return res.status(404).json({ message: "Task not found" });
         }
-
+        console.log(task.likes.users);
         //Check if user has already liked the task
         if (task.likes.users.includes(userId)) {
             return res.status(400).json({ message: "You have already liked the task" });
@@ -165,9 +167,10 @@ const likeTask = async (req, res) => {
         }
 
         const userName = userInfo.name;
+        console.log(userName);
 
         // Add the like with userId and userName to the task
-        task.likes.users.push({ userId, userName });
+        task.likes.users.push({ userId, username: userName });
 
         await task.save();
 

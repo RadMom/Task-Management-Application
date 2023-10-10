@@ -32,9 +32,9 @@ tasksRoutes.put("/:taskId", authUser, editTask);
 tasksRoutes.delete("/:taskId", authUser, deleteTask);
 
 // likeTask
-tasksRoutes.post("/:taskId/like", authUser, likeTask);
+tasksRoutes.put("/:taskId/like", authUser, likeTask);
 
 // unlikeTask
-tasksRoutes.post("/:taskId/unlike", authUser, unlikeTask);
+tasksRoutes.put("/:taskId/unlike", authUser, unlikeTask);
 
 module.exports = tasksRoutes;

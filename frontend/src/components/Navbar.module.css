@@ -1,0 +1,11 @@
+header {
+    border: 1px solid black;
+    margin-bottom: 20px;
+}
+a {
+    margin: 10px;
+}
+a.active,
+a:hover {
+    color: red;
+}
