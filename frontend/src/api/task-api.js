@@ -45,15 +45,22 @@ export const likeTask = async (id) => {
     console.log(id);
     try {
         const response = await axiosInstance.put(`/tasks/${id}/like`);
-        const data = response.data;
+        const data = await response.data;
         return data;
     } catch (err) {
-        console.log(err);
+        console.log(err.response.data);
+        throw Error(err.response.data.error ? err.response.data.error : err.response.data.message);
     }
 };
 
 //Unlike Task
 export const unlikeTask = async (id) => {
+    console.log(id);
     try {
-    } catch (err) {}
+        const response = await axiosInstance.put(`/tasks/${id}/unlike`);
+        const data = await response.data;
+        return data;
+    } catch (err) {
+        console.log("unlikeTask err: " + err);
+    }
 };

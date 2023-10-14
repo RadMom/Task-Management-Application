@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Task = require("../models/Task");
 const User = require("../models/User");
 
@@ -147,30 +148,34 @@ const deleteTask = async (req, res) => {
 // tasksRoutes.post("/:taskId/like");
 const likeTask = async (req, res) => {
     const taskId = req.params.taskId;
-    const userId = req.user._id;
-    console.log(taskId, userId);
+    const userIdToCheck = req.user._id.toString(); //new mongoose.Types.ObjectId(req.user._id);
+
     try {
         //Check if task exists
         const task = await Task.findById(taskId);
         if (!task) {
             return res.status(404).json({ message: "Task not found" });
         }
-        console.log(task.likes.users);
-        //Check if user has already liked the task
-        if (task.likes.users.includes(userId)) {
-            return res.status(400).json({ message: "You have already liked the task" });
+
+        // Check if the user has already liked the task
+
+        for (let user of task.likes.users) {
+            if (user.userId.toString() == userIdToCheck) {
+                // throw Error("User has already liked the task");
+                return res.status(400).json({ error: "User has already liked the task" });
+            }
         }
+
         // Fetch the user's name from the database (only name is retrieved)
-        const userInfo = await User.findById(userId).select("name");
+        const userInfo = await User.findById(userIdToCheck).select("name");
         if (!userInfo) {
             return res.status(404).json({ message: "User not found" });
         }
 
         const userName = userInfo.name;
-        console.log(userName);
 
         // Add the like with userId and userName to the task
-        task.likes.users.push({ userId, username: userName });
+        task.likes.users.push({ userId: req.user._id, username: userName });
 
         await task.save();
 
@@ -186,8 +191,9 @@ const likeTask = async (req, res) => {
 //Why had to .toString when task.likes.users.filter((id) => id.toString() != userId.toString());???
 const unlikeTask = async (req, res) => {
     const taskId = req.params.taskId;
-    const userId = req.user._id;
-    console.log(taskId, userId);
+    const userIdAsString = req.user._id.toString();
+    console.log(taskId, userIdAsString);
+
     try {
         //Check if task exists
         const task = await Task.findById(taskId);
@@ -196,13 +202,14 @@ const unlikeTask = async (req, res) => {
         }
 
         //Check if user has already liked the task
-        if (!task.likes.users.includes(userId)) {
+        //tuka obatachih neshto. utre na svejo da pregledam!!!!
+        if (task.likes.users.map((user) => user.userId.toString() !== userIdAsString)) {
             return res.status(400).json({ message: "You haven't liked this task" });
         }
 
         console.log("Before filter:" + task.likes.users);
         task.likes.users = task.likes.users.filter(
-            (user) => user.userId.toString() != userId.toString()
+            (user) => user.userId && user.userId.toString() != userIdAsString
         );
         console.log("After filter:" + task.likes.users);
 
