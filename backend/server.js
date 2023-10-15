@@ -7,6 +7,7 @@ dotenv.config();
 const userRoutes = require("./routes/userRoutes");
 const tasksRoutes = require("./routes/taskRoutes");
 const cookieParser = require("cookie-parser");
+const errorHandler = require("./middleware/errorHandler");
 
 const port = process.env.PORT || 5000;
 
@@ -44,5 +45,8 @@ app.use("/tasks", tasksRoutes);
 app.get("/", (req, res) => {
     res.send("API is running...");
 });
+
+//errorHandler
+app.use(errorHandler);
 
 app.listen(port, () => console.log(`Server running on port: ${port} !`));

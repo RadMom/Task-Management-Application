@@ -4,43 +4,54 @@ const User = require("../models/User");
 
 // createTask
 // tasksRoutes.post("/");
-const createTask = async (req, res) => {
+const createTask = async (req, res, next) => {
     const task = req.body;
 
     const userId = req.user._id;
     console.log(task);
 
     //Input validation
-    if (!task.title || !task.description) {
-        return res.status(400).json({ message: "Title, and discription are required !" });
-    }
 
     try {
+        if (!task.title || !task.description) {
+            // return res.status(400).json({ message: "Title, and discription are required !" });
+
+            const error = new Error("Title, and discription are required !");
+            error.statusCode = 400;
+            throw error;
+        }
         const newTask = new Task({ ...task, creator: userId });
         await newTask.save();
         res.status(200).json({ message: "Task created successfully", newTask });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Internal server error" });
+        next(err);
+        // res.status(500).json({ message: "Internal server error" });
     }
 };
 
 // getAllPublicTasks
 // tasksRoutes.get("/public");
 //NEED PAGINATION LOGIC !!!!!
-const getAllPublicTasks = async (req, res) => {
+const getAllPublicTasks = async (req, res, next) => {
     try {
         const publicTasks = await Task.find({ isPublic: true });
+
+        if (!publicTasks) {
+            const error = new Error("No public tasks !");
+            error.statusCode = 404;
+            throw error;
+        }
         res.status(200).json(publicTasks);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Internal server error" });
+        next(err);
     }
 };
 
 // getUserTasks
 // tasksRoutes.get("/user/:userId");
-const getUserTasks = async (req, res) => {
+const getUserTasks = async (req, res, next) => {
     const userId = req.params.userId;
     try {
         if (userId == req.user.toString()) {
@@ -52,31 +63,37 @@ const getUserTasks = async (req, res) => {
         }
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Internal server error" });
+        next(err);
     }
 };
 
 // getSingleTask
 // tasksRoutes.get("/:taskId");
 //Why .toString => if (req.user._id.toString() == task.creator.toString()) ???
-const getTask = async (req, res) => {
+const getTask = async (req, res, next) => {
     const taskId = req.params.taskId;
 
     try {
         const task = await Task.findById(taskId);
         console.log(`Task is: ${typeof task.creator}`); //Object
         if (!task) {
-            return res.status(404).json({ message: "Task not found" });
+            // return res.status(404).json({ message: "Task not found" });
+            const error = new Error("Task not found");
+            error.statusCode = 404;
+            throw error;
         }
 
         if (!task.isPublic && req.user._id.toString() !== task.creator.toString()) {
-            return res.status(401).json({ message: "Not authorized, token failed!" });
+            // return res.status(401).json({ message: "Not authorized, token failed!" });
+            const error = new Error("Not authorized, token failed!");
+            error.statusCode = 401;
+            throw error;
         }
 
         res.status(200).json(task);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: "Internal server error" });
+        next(err);
     }
 };
 
