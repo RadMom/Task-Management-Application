@@ -1,34 +1,37 @@
-import React from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../main";
 import { likeTask, unlikeTask } from "../api/task-api";
 import classes from "./TasksList.module.css";
 
 const TasksList = ({ task }) => {
-    const likeTaskMutation = useMutation(
-        {
-            mutationFn: likeTask,
+    const [error, setError] = useState("");
+
+    const likeTaskMutation = useMutation({
+        mutationFn: likeTask,
+
+        onError: (error) => {
+            setError((err) => error.message);
         },
-        {
-            onError: (error) => {
-                console.log(error);
-                // The error will be automatically captured and can be used in your component
-                return error;
-            },
-        }
-    );
-    console.log(likeTaskMutation);
-    const unlikeTaskMutation = useMutation(
-        {
-            mutationFn: unlikeTask,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["public"] });
+            queryClient.invalidateQueries({ queryKey: ["userTasks"] });
+            setError("");
         },
-        {
-            onError: (error) => {
-                console.log(error);
-                // The error will be automatically captured and can be used in your component
-                throw error;
-            },
-        }
-    );
+    });
+
+    const unlikeTaskMutation = useMutation({
+        mutationFn: unlikeTask,
+
+        onError: (error) => {
+            setError((err) => error.message);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["public"] });
+            queryClient.invalidateQueries({ queryKey: ["userTasks"] });
+            setError("");
+        },
+    });
 
     const likeTaskHandler = (e) => {
         e.preventDefault();
@@ -41,9 +44,11 @@ const TasksList = ({ task }) => {
     };
     return (
         <div className={classes["task-card"]}>
-            {likeTaskMutation.isError && <p>{likeTaskMutation.error.message}error</p>}
-            {unlikeTaskMutation.error && <p>{unlikeTaskMutation.error}error</p>}
-            <h2 className={classes["task-title"]}>{task.title}</h2>
+            {error && <p className={classes["error-message"]}>{error}</p>}
+            <h2 className={classes["task-title"]}>Title: {task.title}</h2>
+            {task.description && (
+                <p className={classes["task-description"]}>Description: {task.description}</p>
+            )}
             <p className={classes["task-creator"]}>Creator: {task.creator}</p>
             <p className={classes["task-status"]}>Status: {task.status}</p>
             {task.startDate && (
@@ -57,11 +62,24 @@ const TasksList = ({ task }) => {
                 </p>
             )}
             <p className={classes["task-priority"]}>Priority: {task.priority}</p>
-            {task.isPublic && <span className={classes["task-chip"]}>Public</span>}
-
-            <div>
-                <button onClick={likeTaskHandler}>{task.likes.users.length} likes</button>
-                <button onClick={unlikeTaskHandler}>unlike</button>
+            <div className={classes["task-chip-container"]}>
+                <span
+                    className={
+                        task.isPublic
+                            ? `${classes["task-chip"]} ${classes["public-task"]}`
+                            : `${classes["task-chip"]} ${classes["private-task"]}`
+                    }
+                >
+                    {task.isPublic ? "Public" : "Private"}
+                </span>
+            </div>
+            <div className={classes["task-buttons"]}>
+                <button className={classes["like-button"]} onClick={likeTaskHandler}>
+                    {task.likes.users.length} likes
+                </button>
+                <button className={classes["unlike-button"]} onClick={unlikeTaskHandler}>
+                    Unlike
+                </button>
             </div>
         </div>
     );

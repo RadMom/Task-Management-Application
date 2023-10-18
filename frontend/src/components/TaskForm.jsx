@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import "./TaskForm.css";
+import { createTask } from "../api/task-api";
 
 const TaskForm = ({ task }) => {
     const [formData, setFormData] = useState({
@@ -29,36 +30,17 @@ const TaskForm = ({ task }) => {
     const submitHandler = async (e) => {
         e.preventDefault();
 
-        // Perform validation
-        const validationErrors = validateFormData(formData);
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);
-        } else {
-            try {
-                // Send a POST request to your server or API endpoint
-                const response = await axios.post("http://localhost:5000/tasks", formData, {
-                    withCredentials: true,
-                });
-
-                // Handle the response as needed
-                console.log("Form submission response:", response);
-                // Reset the form
-                setFormData({
-                    title: "",
-                    startDate: "",
-                    deadline: "",
-                    description: "",
-                    status: "Not Started",
-                    isPublic: false,
-                    priority: "Medium",
-                    likes: [],
-                });
-                setErrors({});
-            } catch (err) {
-                // Handle errors from the API request
-                console.error("Error submitting form:", err);
-            }
-        }
+        createTask(formData);
+        setFormData({
+            title: "",
+            startDate: "",
+            deadline: "",
+            description: "",
+            status: "Not Started",
+            isPublic: false,
+            priority: "Medium",
+            likes: [],
+        });
     };
 
     const validateFormData = (data) => {

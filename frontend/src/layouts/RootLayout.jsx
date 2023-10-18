@@ -2,12 +2,14 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
-const RootLayout = () => {
+const RootLayout = ({ userInfo }) => {
     return (
-        <div>
-            <Navbar />
-            <Outlet />
-        </div>
+        <>
+            <Navbar userInfo={userInfo} />
+            <main>
+                <Outlet />
+            </main>
+        </>
     );
 };
 

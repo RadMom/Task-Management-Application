@@ -1,44 +1,51 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import classes from "./Navbar.module.css";
+import { useAuthContext } from "../context/useAuthContext";
+import { logoutUser } from "../api/user-api";
 
 function Navbar() {
+    const { userInfo, dispatch } = useAuthContext();
+    const navigation = useNavigate();
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        logoutUser();
+        dispatch({ type: "LOGOUT" });
+        navigation("/");
+    };
     return (
         <header>
             <h1>Tasks App</h1>
-            <nav>
-                <NavLink
-                    to="/"
-                    className={({ isActive }) => (isActive ? classes.active : undefined)}
-                    end
-                >
-                    Home
-                </NavLink>
-                <NavLink
-                    to="tasks"
-                    className={({ isActive }) => (isActive ? classes.active : undefined)}
-                >
-                    Public Tasks
-                </NavLink>
-                <NavLink
-                    to="about"
-                    className={({ isActive }) => (isActive ? classes.active : undefined)}
-                >
-                    About
-                </NavLink>
-                <NavLink
-                    to="login"
-                    className={({ isActive }) => (isActive ? classes.active : undefined)}
-                >
-                    Login
-                </NavLink>
-                <NavLink
-                    to="register"
-                    className={({ isActive }) => (isActive ? classes.active : undefined)}
-                >
-                    Registration
-                </NavLink>
-            </nav>
+            <div className={classes["nav-info"]}>
+                <nav>
+                    <NavLink
+                        to="/"
+                        className={({ isActive }) => (isActive ? classes.active : undefined)}
+                        end
+                    >
+                        Home
+                    </NavLink>
+                    <NavLink
+                        to="tasks"
+                        className={({ isActive }) => (isActive ? classes.active : undefined)}
+                    >
+                        Public Tasks
+                    </NavLink>
+                    <NavLink
+                        to="about"
+                        className={({ isActive }) => (isActive ? classes.active : undefined)}
+                    >
+                        About
+                    </NavLink>
+                </nav>
+                {userInfo && (
+                    <div className={classes["user-info"]}>
+                        <p>Username: {userInfo.name}</p>{" "}
+                        <button onClick={handleLogout}>logout</button>
+                    </div>
+                )}
+            </div>
         </header>
     );
 }

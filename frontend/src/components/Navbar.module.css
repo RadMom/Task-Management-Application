@@ -2,6 +2,20 @@ header {
     border: 1px solid black;
     margin-bottom: 20px;
 }
+
+.nav-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-info {
+    display: flex;
+    margin-right: 1rem;
+}
+.user-info p {
+    margin-right: 1rem;
+}
+
 a {
     margin: 10px;
 }
