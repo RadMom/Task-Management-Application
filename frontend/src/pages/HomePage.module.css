@@ -1,3 +1,9 @@
-.wellcome-info {
-    border: 1px solid black;
+.home-page {
+    background-color: var(--clr-neutral-300);
+    flex-grow: 1;
+}
+
+.wellcome-info h2 {
+    text-align: center;
+    margin-bottom: 20px;
 }

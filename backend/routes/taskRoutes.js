@@ -13,11 +13,12 @@ const {
     unlikeTask,
 } = require("../controllers/taskControllers");
 
-// createTask
-tasksRoutes.post("/", authUser, createTask);
-
 // getAllPublicTasks
 tasksRoutes.get("/public", getAllPublicTasks);
+
+//authUser routes
+// createTask
+tasksRoutes.post("/", authUser, createTask);
 
 // getAllUserTasks
 tasksRoutes.get("/user/:userId", authUser, getUserTasks);

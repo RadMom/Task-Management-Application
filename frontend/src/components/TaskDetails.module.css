@@ -1,3 +1,100 @@
-.task {
-    border: 1px solid black;
+ul {
+    padding: 0;
+}
+.task-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    background-color: #fff;
+    box-shadow: 2px 2px 4px #888888;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.body {
+    display: flex;
+    justify-content: space-between;
+    height: 150px;
+}
+
+.error-message {
+    color: red;
+    font-size: large;
+}
+
+/* .task-title-and-creator {
+    display: flex;
+} */
+
+.task-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.task-description {
+    flex-direction: row;
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    padding: 3px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.task-chip-container {
+    margin-top: 10px;
+}
+
+.task-chip {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.public-task {
+    background-color: var(--clr--green-600); /* Green */
+}
+
+.private-task {
+    background-color: var(--clr--red-600); /* Red */
+}
+
+.task-buttons {
+    display: flex;
+    margin-top: 10px;
+}
+.like-button {
+    margin-right: 10px;
+}
+
+.like-button,
+.unlike-button {
+    padding: 8px 16px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+.like-button {
+    background-color: var(--clr--blue-300); /* Blue */
+}
+.like-button:hover {
+    background-color: var(--clr--blue-600); /* Blue */
+}
+
+.unlike-button {
+    background-color: var(--clr--red-300); /* Red */
+}
+.unlike-button:hover {
+    background-color: var(--clr--red-600); /* Red */
 }

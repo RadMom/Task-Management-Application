@@ -5,7 +5,7 @@ import { loginUser } from "../../api/user-api";
 import classes from "./Login.module.css";
 import { useAuthContext } from "../../context/useAuthContext";
 
-const Login = ({ registration }) => {
+const Login = ({ showRegistrationComponent }) => {
     const { dispatch } = useAuthContext();
     const [formData, setFormData] = useState({
         email: "",
@@ -44,9 +44,9 @@ const Login = ({ registration }) => {
         mutate(formData);
     };
 
-    const handleRegistration = (e) => {
+    const handleShowRegistrationComponent = (e) => {
         e.preventDefault();
-        registration((state) => !state);
+        showRegistrationComponent((state) => !state);
     };
 
     return (
@@ -78,10 +78,17 @@ const Login = ({ registration }) => {
                         required
                     />
                 </div>
-                <button type="submit" className={classes["submit-button"]}>
-                    Log In
-                </button>
-                <button onClick={handleRegistration}>Registration</button>
+                <div className={classes.buttons}>
+                    <button type="submit" className={classes["submit-button"]}>
+                        Log In
+                    </button>
+                    <button
+                        className={classes["registration-button"]}
+                        onClick={handleShowRegistrationComponent}
+                    >
+                        Registration
+                    </button>
+                </div>
             </form>
         </div>
     );

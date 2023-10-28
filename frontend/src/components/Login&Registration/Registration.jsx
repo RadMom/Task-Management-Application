@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "../../api/user-api";
 import { useAuthContext } from "../../context/useAuthContext";
 
-function Registration({ loginComponent }) {
+function Registration({ showLoginComponent }) {
     const { dispatch } = useAuthContext();
     const [formData, setFormData] = useState({
         name: "",
@@ -44,9 +44,9 @@ function Registration({ loginComponent }) {
         mutate(formData);
     };
 
-    const handleRegistration = (e) => {
+    const handleShowLoginComponent = (e) => {
         e.preventDefault();
-        loginComponent((state) => !state);
+        showLoginComponent((state) => !state);
     };
 
     return (
@@ -95,7 +95,7 @@ function Registration({ loginComponent }) {
             </form>
             <div>
                 <p>You have registration already ?</p>
-                <button className={classes["submit-button"]} onClick={handleRegistration}>
+                <button className={classes["submit-button"]} onClick={handleShowLoginComponent}>
                     Login
                 </button>
             </div>

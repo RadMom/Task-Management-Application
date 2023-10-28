@@ -1,0 +1,147 @@
+/* ul {
+    padding: 0;
+}
+
+label {
+    margin: 0;
+}
+input,
+input[type="text"],
+input[type="date"],
+select,
+label,
+textarea {
+    padding: 0px;
+    margin: 0;
+    font-weight: lighter;
+}
+
+.task-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    background-color: #fff;
+    box-shadow: 2px 2px 4px #888888;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.body {
+    display: flex;
+    justify-content: space-between;
+    height: 150px;
+}
+
+.error-message {
+    color: red;
+    font-size: large;
+}
+
+.task-title-and-creator {
+    display: flex;
+    align-items: center;
+}
+.task-title-and-creator label {
+    margin-bottom: 0px;
+    margin-right: 10px;
+}
+
+.task-description {
+    flex-direction: row;
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    padding: 3px;
+    font-size: 1rem;
+    color: #333;
+}
+.task-description {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-description h3 {
+    margin: 0; /* Remove default margin from the heading */
+/* } */
+
+/* .task-description-input {
+    flex-grow: 1;  Make the textarea grow to fill the remaining space 
+    border: 1px solid #ccc;
+    padding: 3px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.task-chip-container {
+    display: flex;
+    align-items: center;
+    width: 90px;
+}
+.task-chip-container label {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+}
+.task-chip-container input {
+    margin-left: 10px;
+}
+
+.task-isPublic-input {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+} 
+
+.public-task {
+    background-color: #4caf50; 
+}
+
+.private-task {
+    background-color: #f44336; 
+}
+
+.task-buttons {
+    display: flex;
+    margin-top: 10px;
+}
+.save-button,
+.cancel-button {
+    margin-right: 10px;
+}
+
+.save-button,
+.cancel-button,
+.delete-button {
+    padding: 8px 16px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+.save-button {
+    background-color: #007bff; 
+}
+.save-button:hover {
+    background-color: #4605fa; 
+}
+
+.cancel-button {
+    background-color: #f44336; 
+}
+.cancel-button:hover {
+    background-color: #e20404; 
+}  */

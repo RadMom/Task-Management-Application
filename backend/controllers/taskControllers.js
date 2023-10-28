@@ -98,7 +98,7 @@ const editTask = async (req, res, next) => {
     const taskId = req.params.taskId; // Extract the task ID from the request parameters. String
     const userId = req.user._id; //Object
 
-    const { title, description, deadline, status, isPublic, priority } = req.body;
+    const { title, description, startDate, deadline, status, isPublic, priority } = req.body;
     try {
         // Check if the task exists
         const task = await Task.findById(taskId);
@@ -117,6 +117,7 @@ const editTask = async (req, res, next) => {
         // Update task properties
         task.title = title || task.title;
         task.description = description || task.description;
+        task.startDate = startDate || task.startDate;
         task.deadline = deadline || task.deadline;
         task.status = status || task.status;
         task.isPublic = isPublic !== undefined ? isPublic : task.isPublic;

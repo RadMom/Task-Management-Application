@@ -1,27 +1,22 @@
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
 import { fetchPublicTasks } from "../api/task-api";
-
+//components
 import TasksList from "../components/TasksList";
 
 const TaskPage = () => {
     const { data, isLoading, isError, error } = useQuery({
-        queryKey: ["public"],
+        queryKey: ["tasks"],
         queryFn: fetchPublicTasks,
     });
+    console.log(data);
 
     return (
-        <div>
+        <>
             {isLoading && <p>Loading...</p>}
             {isError && <p>Error: {error.message}</p>}
-            {data && (
-                <ul>
-                    {data.map((task) => (
-                        <TasksList key={task._id} task={task} />
-                    ))}
-                </ul>
-            )}
-        </div>
+            {data && <TasksList tasks={data} />}
+        </>
     );
 };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import classes from "./Navbar.module.css";
 import { useAuthContext } from "../context/useAuthContext";
@@ -7,6 +7,18 @@ import { logoutUser } from "../api/user-api";
 function Navbar() {
     const { userInfo, dispatch } = useAuthContext();
     const navigation = useNavigate();
+
+    // useEffect(() => {
+    //     if (userInfo) {
+    //         const jwtExp = JSON.parse(userInfo).jwtExp;
+    //         console.log(jwtExp);
+    //         if (jwtExp <= new Date()) {
+    //             logoutUser();
+    //             dispatch({ type: "LOGOUT" });
+    //             // navigation("/");
+    //         }
+    //     }
+    // }, []);
 
     const handleLogout = (e) => {
         e.preventDefault();

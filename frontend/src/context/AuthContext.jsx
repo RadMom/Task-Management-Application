@@ -22,10 +22,11 @@ export const AuthContextProvider = ({ children }) => {
         userInfo: null,
     });
 
+    console.log("AuthContextProvider");
+
     useEffect(() => {
         //We parse the data from locale storage because it is JSON string
         const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
         if (userInfo) {
             dispatch({ type: "LOGIN", payload: userInfo });
         }

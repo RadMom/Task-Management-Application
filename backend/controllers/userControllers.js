@@ -32,7 +32,7 @@ const registerUser = async (req, res) => {
             generateJWT(res, user._id);
 
             res.status(201).json({
-                message: `${user.name} registration ready`,
+                jwtExp: res.jwtExp,
                 _id: user._id,
                 name: user.name,
                 email: user.email,
@@ -74,10 +74,10 @@ const loginUser = async (req, res) => {
 
         // Generate JWT Token
         generateJWT(res, user._id);
-        console.log(res.cookie.jwt);
+        console.log("Exp from generateJWT :" + res.jwtExp);
         // Respond with success and user data
         res.status(200).json({
-            message: `${user.email} successfully logged in`,
+            jwtExp: res.jwtExp,
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -93,6 +93,8 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
     res.cookie("jwt", "", {
         httpOnly: true,
+        sameSite: "none",
+        secure: true,
         expires: new Date(0),
     });
 

@@ -1,3 +1,23 @@
+:root {
+    --clr-neutral-100: #fff;
+    --clr-neutral-300: rgba(207, 200, 200, 0.973);
+    --clr-neutral-500: rgba(189, 173, 173, 0.699);
+    --clr-neutral-700: rgba(112, 108, 108, 0.952);
+
+    --clr--green-300: rgba(63, 252, 63, 0.815);
+    --clr--green-600: rgba(35, 194, 35, 0.815);
+
+    --clr--red-300: rgba(252, 90, 69, 0.979);
+    --clr--red-600: rgba(233, 38, 12, 0.979);
+
+    --clr--blue-300: rgba(75, 72, 255, 0.979);
+    --clr--blue-600: rgba(37, 34, 240, 0.979);
+
+    --clr--error: red;
+
+    font-size: 16px;
+}
+
 *,
 *::before,
 *::after {
@@ -6,13 +26,8 @@
 * {
     margin: 0;
 }
-html {
-    min-height: 100vh;
-}
+
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
 }
@@ -46,13 +61,13 @@ h6 {
     isolation: isolate;
 }
 main {
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
 }
 
 #root {
     display: flex;
     flex-direction: column;
-    min-height: 100%;
+    min-height: 100vh;
 }
