@@ -40,6 +40,7 @@ const HomePage = () => {
         enabled: isUserInfoAvailable === true, //enabled: This determines whether the query should be automatically
         // executed. It is set to true only if userInfo has a truthy _id value.
     });
+    // isError&& error.message
 
     // console.log(
     //     "    isUserInfoAvailable = " + isUserInfoAvailable,

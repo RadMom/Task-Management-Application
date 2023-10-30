@@ -31,7 +31,7 @@ function App() {
             }
         }
         console.log("App component");
-    }, [userData, dispatch]);
+    }, [userInfo, dispatch]);
 
     const router = createBrowserRouter([
         {

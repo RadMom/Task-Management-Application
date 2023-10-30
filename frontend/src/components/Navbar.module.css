@@ -1,6 +1,11 @@
 header {
     padding-bottom: 15px;
-    background-color: var(--clr-neutral-700);
+    background-color: var(--clr--blue-600);
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+
+    box-shadow: 2px 2px 4px var(--clr--blue-300);
 }
 
 header h1 {

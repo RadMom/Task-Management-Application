@@ -7,8 +7,8 @@ ul {
     border: 1px solid #ccc;
     padding: 10px;
     margin: 10px;
-    background-color: #fff;
-    box-shadow: 2px 2px 4px #888888;
+    background-color: var(--clr--blue-600);
+    box-shadow: 2px 2px 4px var(--clr--blue-300);
 }
 
 .header {
